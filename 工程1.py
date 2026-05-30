@@ -1,9 +1,12 @@
 import requests
 import time
+import os
 
 # ========== 配置区 ==========
-SEND_KEY = "你的SendKey"  # Server酱（可选，不填则跳过）
-BARK_KEY = "fRtmHT3fprXvXzfuZJDLYB"  # Bark
+# 优先从环境变量获取（用于 GitHub Actions），如果不存在则使用默认值（本地测试用）
+SEND_KEY = os.environ.get('')
+BARK_KEY = os.environ.get('BARK_KEY', "fRtmHT3fprXvXzfuZJDLYB" )
+
 
 
 # ========== 获取热搜（返回标题列表）==========
