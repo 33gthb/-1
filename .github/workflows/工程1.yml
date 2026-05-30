@@ -1,0 +1,31 @@
+# .github/workflows/hot-monitor.yml
+name: Daily Hot News Monitor
+
+# 触发条件：定时任务 + 手动触发
+on:
+  schedule:
+    # 每天早上 8:30 (北京时间)
+    - cron: '30 0 * * *'
+      timezone: 'Asia/Shanghai'  # 关键！指定北京时间[reference:6][reference:7]
+  workflow_dispatch:  # 支持在 GitHub 网页上手动点击运行[reference:8][reference:9]
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'  # 建议固定版本[reference:10]
+
+      - name: 安装依赖
+        run: pip install requests
+
+      - name: 运行热点监控脚本
+        env:
+          SEND_KEY: ${{ secrets.SEND_KEY }}    # GitHub Secrets 中的变量名
+          BARK_KEY: ${{ secrets.BARK_KEY }}    # GitHub Secrets 中的变量名
+        run: python hot_monitor.py
